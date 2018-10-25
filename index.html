@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+		}
+
+		section {
+			overflow: hidden;
+		}
+
+		.warp {
+			position: relative;
+			width: 100%;
+			height: 300px;
+		}
+
+		.main {
+			position: absolute;
+			text-align: center;
+			width: 100%;
+			line-height: 300px;
+			background-color: #ddd;
+		}
+	</style>
+</head>
+
+<body>
+	<section class="sec1">
+		<div class="warp w1">
+			<div class="main m1">
+				<div>1</div>
+			</div>
+			<div class="main m1">
+				<div>2</div>
+			</div>
+			<div class="main m1">
+				<div>3</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="sec2">
+		<div class="warp w2">
+			<div class="main m2">
+				<div>1</div>
+			</div>
+			<div class="main m2">
+				<div>2</div>
+			</div>
+			<div class="main m2">
+				<div>3</div>
+			</div>
+			<div class="main m2">
+				<div>4</div>
+			</div>
+		</div>
+	</section>
+</body>
+<script src="./lib/index.js"></script>
+<script>
+	const carousel = new Carousel({
+		warp: 'w1',
+		main: 'm1',
+		play: true,
+		point: true
+	})
+
+	carousel.init();
+
+	const carousel2 = new Carousel({
+		warp: 'w2',
+		main: 'm2',
+		play: true,
+		horizontal: true,
+		point: true
+	})
+
+	carousel2.init();
+</script>
+
+</html>
