@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "description": "h5-轮播图",
   "main": "./lib/index.js",
+  "repository": {
+		"type": "git",
+		"url": "https://github.com/zyxpz/mido-h5-carousel"
+	},
+	"bugs": {
+		"url": "https://github.com/zyxpz/mido-h5-carousel/issues"
+	},
   "scripts": {
     "build": "./node_modules/.bin/gulp build"
   },
