@@ -3,7 +3,7 @@ Object.prototype.prepend = function (newElenment) {
   return this
 }
 
-class Carousel {
+export default class Carousel {
   constructor(opts) {
     this.attrs = {
       warp: opts.warp,

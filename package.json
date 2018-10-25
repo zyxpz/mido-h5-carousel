@@ -1,6 +1,6 @@
 {
   "name": "mido-h5-carousel",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "h5-轮播图",
   "main": "./lib/index.js",
   "repository": {
