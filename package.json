@@ -1,6 +1,6 @@
 {
   "name": "mido-h5-carousel",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "h5-轮播图",
   "main": "./lib/index.js",
   "repository": {
@@ -28,5 +28,11 @@
     "gulp-load-plugins": "^1.5.0",
     "gulp-uglify": "^3.0.1",
     "gulp-util": "^3.0.8"
-  }
+  },
+  "files": [
+    "bin",
+    "lib",
+    "package.json",
+    "README.md"
+  ]
 }
