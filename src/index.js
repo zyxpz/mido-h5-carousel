@@ -237,13 +237,15 @@ export default class Carousel {
   }
 
   domShow(index) {
+    const that = this;
     if (this.attrs.horizontal) {
       if (index === -1) {
         this.index = this._mainLen
         this._warp.style.cssText = `transform: translate3d(${1 * this.warpW}px, 0, 0); transition: transform .5s`
 
-        setTimeout(() => {
+        this.timmer = setTimeout(() => {
           this._warp.style.cssText = `transform: translate3d(${-(this._mainLen - 1) * this.warpW}px, 0, 0);`
+          clearTimeout(that.timmer)
         }, 550);
       } else {
         this._warp.style.cssText = `transform: translate3d(${-index * this.warpW}px, 0,0); transition: transform .5s`
@@ -251,8 +253,9 @@ export default class Carousel {
 
       if (index === this._mainLen) {
         this.index = 0
-        setTimeout(() => {
+        this.timmer = setTimeout(() => {
           this._warp.style.cssText = `transform: translate3d(0, 0, 0);`
+          clearTimeout(that.timmer)
         }, 550);
       }
     } else {
@@ -260,8 +263,9 @@ export default class Carousel {
         this.index = this._mainLen
         this._warp.style.cssText = `transform: translate3d(0, ${1 * this.warpH}px, 0); transition: transform .5s`
 
-        setTimeout(() => {
+        this.timmer = setTimeout(() => {
           this._warp.style.cssText = `transform: translate3d(0, ${-(this._mainLen - 1) * this.warpH}px, 0);`
+          clearTimeout(that.timmer)
         }, 550);
       } else {
         this._warp.style.cssText = `transform: translate3d(0, -${index * this.warpH}px, 0); transition: transform .5s`
@@ -269,8 +273,9 @@ export default class Carousel {
 
       if (index === this._mainLen) {
         this.index = 0
-        setTimeout(() => {
+        this.timmer = setTimeout(() => {
           this._warp.style.cssText = `transform: translate3d(0, 0, 0);`
+          clearTimeout(that.timmer)
         }, 550);
       }
     }
