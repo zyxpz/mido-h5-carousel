@@ -167,6 +167,12 @@ export default class Carousel {
 
     this.attrs.endPosX = e.touches[0].pageX
 
+    if (this.attrs.horizontal) {
+      this._warp.style.cssText = `transform: translate3d(${this.attrs.endPosX - this.attrs.startPosX - this.index * e.target.offsetWidth}px, 0, 0); transition: none`
+    } else {
+      this._warp.style.cssText = `transform: translate3d(0, ${this.attrs.endPos - this.attrs.startPos - this.index * e.target.offsetHeight}px, 0); transition: none`
+    }
+
   }
 
   handleTouchEnd() {

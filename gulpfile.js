@@ -22,14 +22,21 @@ gulp.task('js', () => {
 		.on('error', (err) => {
 			gutil.log(gutil.colors.red('[Error]'), err.toString());
 		})
-		.pipe(gulp.dest('lib'))
+		.pipe(gulp.dest('lib/'))
 });
 
 // 监听js修改
 gulp.task('watch:js', () => {
-	gulp.watch(['./src/index.js']);
+	gulp.watch(['./src/index.js'], () => {
+		gulp.run('js');
+	});
 });
 
-gulp.task('default', ['js', 'watch:js']);
+gulp.task('default', () => {
+	gulp.run('js');
+	gulp.run('watch:js');
+});
 
-gulp.task('build', ['clean', 'default']);
+gulp.task('build', ['clean'], () => {
+	gulp.run('default');
+});
