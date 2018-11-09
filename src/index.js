@@ -3,7 +3,9 @@ Object.prototype.prepend = function (newElenment) {
   return this
 }
 
-export default class Carousel {
+const loop = () => {}
+
+class Carousel {
   constructor(opts) {
     this.attrs = {
       warp: opts.warp,
@@ -45,6 +47,8 @@ export default class Carousel {
 
     this._warp.prepend(cloneLast)
 
+    this._warp.style.cssText = `transform: translate3d(0, 0, 0); transition: none`
+
     this._warp.childNodes.forEach((e, i) => {
       if (e.nodeType === 1) {
         e.style.height = `${warpH}px`;
@@ -62,7 +66,7 @@ export default class Carousel {
     }
 
     if (this.attrs.play) {
-      this.handlePlayer()
+      // this.handlePlayer()
     }
 
     // 创建小点
@@ -138,6 +142,7 @@ export default class Carousel {
     this._warp.addEventListener('touchstart', this.handleTouchStart.bind(this))
 
     this._warp.addEventListener('touchend', this.handleTouchEnd.bind(this))
+
   }
 
   handleTouchStart(e) {
@@ -154,10 +159,9 @@ export default class Carousel {
       this.index = e.target.parentNode.index
     }
 
-    clearInterval(this.interval)
-
     this._warp.addEventListener('touchmove', this.handleTouchMove.bind(this))
 
+    clearInterval(this.interval)
   }
 
   handleTouchMove(e) {
@@ -176,11 +180,19 @@ export default class Carousel {
   }
 
   handleTouchEnd() {
-    if (this.attrs.horizontal && this.attrs.endPos !== '') {
-      if ((this.attrs.endPosX - this.attrs.startPosX) > 10) {
-        this.prev()
-      } else if ((this.attrs.endPosX - this.attrs.startPosX) < -10) {
-        this.next()
+    let isMove;
+    let half;
+    if (this.attrs.horizontal) {
+      isMove = ~~(this.attrs.endPosX - this.attrs.startPosX)
+      half = this.warpW * .5
+      if (Math.abs(isMove) >= half) {
+        if (isMove < 0) {
+          this.handleMoveList(this.index + 1)
+        } else {
+          this.handleMoveList(this.index - 1)
+        }
+      } else {
+        this.handleMoveList(this.index)
       }
     } else {
       if ((this.attrs.endPos - this.attrs.startPos) > 10) {
@@ -190,34 +202,40 @@ export default class Carousel {
       }
     }
 
-    if (this.attrs.play) {
-      this.handlePlayer()
-    }
+    // if (this.attrs.play) {
+    //   this.handlePlayer()
+    // }
 
   }
 
-  prev() {
-    this.index = this.index - 1
 
-    if (this.index < 0) {
-      this.index = -1
-      this.domShow(this.index)
-      return
+  handleMoveList(index) {
+    let start,
+      end
+
+    if (this.attrs.horizontal) {
+      start = parseInt(this._warp.style.transform.slice(12))
+      end = -(index * this.warpW)
+      clearInterval(this.interval)
+      this._warp.tweenTranslateXAnimate(start, end, () => {
+        switch (index) {
+          case this._mainLen:
+            this.handleMainMove(0)
+            break;
+          case -1:
+            this.handleMainMove(this.warpW * (1 - this._mainLen))
+            break;
+          default:
+            break;
+        }
+      })
     }
-
-    this.domShow(this.index)
   }
 
-  next() {
-    this.index = this.index + 1
-
-    if (this.index >= this._mainLen) {
-      this.index = this._mainLen
-      this.domShow(this.index)
-      return
+  handleMainMove(pos) {
+    if (this.attrs.horizontal) {
+      this._warp.style.cssText = `transform: translate3d(${pos}px, 0, 0); transition: none`
     }
-
-    this.domShow(this.index)
   }
 
   handlePoint(index) {
@@ -236,59 +254,37 @@ export default class Carousel {
     })
   }
 
-  domShow(index) {
-    const that = this;
-    if (this.attrs.horizontal) {
-      if (index === -1) {
-        this.index = this._mainLen
-        this._warp.style.cssText = `transform: translate3d(${1 * this.warpW}px, 0, 0); transition: transform .5s`
-
-        this.timmer = setTimeout(() => {
-          this._warp.style.cssText = `transform: translate3d(${-(this._mainLen - 1) * this.warpW}px, 0, 0);`
-          clearTimeout(that.timmer)
-        }, 550);
-      } else {
-        this._warp.style.cssText = `transform: translate3d(${-index * this.warpW}px, 0,0); transition: transform .5s`
-      }
-
-      if (index === this._mainLen) {
-        this.index = 0
-        this.timmer = setTimeout(() => {
-          this._warp.style.cssText = `transform: translate3d(0, 0, 0);`
-          clearTimeout(that.timmer)
-        }, 550);
-      }
-    } else {
-      if (index === -1) {
-        this.index = this._mainLen
-        this._warp.style.cssText = `transform: translate3d(0, ${1 * this.warpH}px, 0); transition: transform .5s`
-
-        this.timmer = setTimeout(() => {
-          this._warp.style.cssText = `transform: translate3d(0, ${-(this._mainLen - 1) * this.warpH}px, 0);`
-          clearTimeout(that.timmer)
-        }, 550);
-      } else {
-        this._warp.style.cssText = `transform: translate3d(0, -${index * this.warpH}px, 0); transition: transform .5s`
-      }
-
-      if (index === this._mainLen) {
-        this.index = 0
-        this.timmer = setTimeout(() => {
-          this._warp.style.cssText = `transform: translate3d(0, 0, 0);`
-          clearTimeout(that.timmer)
-        }, 550);
-      }
-    }
-
-    if (this.attrs.point) {
-      this.handlePoint(index)
-    }
-  }
-
   handlePlayer() {
     const that = this;
     this.interval = setInterval(() => {
-      that.next()
+      that.handleMoveList(that.index++)
     }, this.attrs.time)
   }
+}
+
+HTMLElement.prototype.tweenTranslateXAnimate = function (start, end, cb) {
+  let duration = 50;
+  let t = 0;
+  let vv = end - start; //移动的值
+  let Tween = {
+    Quad: {
+      easeOut: function (t, b, c, d) {
+        return -c * (t /= d) * (t - 2) + b;
+      }
+    }
+  };
+  this.timer = setInterval(function () {
+    let dis = start + Tween.Quad.easeOut(++t, 0, vv, duration);
+    this.style.transform = 'translate3d(' + dis + 'px, 0, 0)';
+    if (vv > 0 && parseInt(this.style.transform.slice(12)) >= end) {
+      this.style.transform = 'translate3d(' + parseInt(dis) + 'px, 0, 0)';
+      clearInterval(this.timer);
+      cb && cb();
+    }
+    if (vv < 0 && parseInt(this.style.transform.slice(12)) <= end) {
+      this.style.transform = 'translate3d(' + parseInt(dis) + 'px, 0, 0)';
+      clearInterval(this.timer);
+      cb && cb();
+    }
+  }.bind(this), 4);
 }
