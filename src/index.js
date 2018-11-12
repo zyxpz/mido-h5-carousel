@@ -5,7 +5,7 @@ Object.prototype.prepend = function (newElenment) {
 
 const loop = () => {}
 
-class Carousel {
+export default class Carousel {
   constructor(opts) {
     this.attrs = {
       warp: opts.warp,
