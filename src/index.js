@@ -5,7 +5,7 @@ Object.prototype.prepend = function (newElenment) {
 
 const loop = () => {}
 
-export default class Carousel {
+class Carousel {
   constructor(opts) {
     this.attrs = {
       warp: opts.warp,
@@ -192,10 +192,8 @@ export default class Carousel {
         if (Math.abs(isMove) >= halfs) {
           if (isMove < 0) {
             this.handleMoveList(this.index + 1)
-            this.handlePoint(this.index + 1)
           } else {
             this.handleMoveList(this.index - 1)
-            this.handlePoint(this.index - 1)
           }
         } else {
           this.handleMoveList(this.index)
@@ -211,10 +209,8 @@ export default class Carousel {
         if (Math.abs(isMove) >= halfs) {
           if (isMove < 0) {
             this.handleMoveList(this.index + 1)
-            this.handlePoint(this.index + 1)
           } else {
             this.handleMoveList(this.index - 1)
-            this.handlePoint(this.index - 1)
           }
         } else {
           this.handleMoveList(this.index)
@@ -222,6 +218,10 @@ export default class Carousel {
       } else {
         console.log('未拖动')
       }
+    }
+
+    if (this.attrs.play) {
+      this.handlePlayer(this.index)
     }
   }
 
@@ -237,9 +237,11 @@ export default class Carousel {
         switch (index) {
           case this._mainLen:
             this.handleMainMove(0)
+            this.index = 0
             break;
           case -1:
             this.handleMainMove(this.warpW * (1 - this._mainLen))
+            this.index = this._mainLen
             break;
           default:
             break;
@@ -252,15 +254,18 @@ export default class Carousel {
         switch (index) {
           case this._mainLen:
             this.handleMainMove(0)
+            this.index = 0
             break;
           case -1:
             this.handleMainMove(this.warpH * (1 - this._mainLen))
+            this.index = this._mainLen
             break;
           default:
             break;
         }
       })
     }
+    this.handlePoint(index)
   }
 
   handleMainMove(pos) {
@@ -289,7 +294,8 @@ export default class Carousel {
 
   handlePlayer() {
     this.interval = setInterval(function () {
-      this.handleMoveList(this.index++)
+      this.index = this.index + 1
+      this.handleMoveList(this.index)
     }.bind(this), this.attrs.time)
   }
 
