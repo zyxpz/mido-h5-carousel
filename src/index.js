@@ -5,7 +5,7 @@ Object.prototype.prepend = function (newElenment) {
 
 const loop = () => {}
 
-class Carousel {
+export default class Carousel {
   constructor(opts) {
     this.attrs = {
       warp: opts.warp,
@@ -19,7 +19,7 @@ class Carousel {
       pointColor: opts.pointColor || 'blue', // 选择颜色
       pointSize: opts.pointSize || '6px', // 圆点大小
       touch: opts.touch || false, // 是否可滑动
-      half: opts.half || this.warpW * .5 // 切换
+      half: opts.half || null // 切换
     }
 
     this.index = 0;
@@ -184,11 +184,12 @@ class Carousel {
 
   handleTouchEnd() {
     let isMove;
+    let halfs;
     if (this.attrs.horizontal) {
+      halfs = this.attrs.half || this.warpW * .5
       isMove = ~~(this.attrs.endPosX - this.attrs.startPosX)
-      
       if (Math.abs(isMove) > 0 && this.attrs.endPosX !== 0) {
-        if (Math.abs(isMove) >= this.attrs.half) {
+        if (Math.abs(isMove) >= halfs) {
           if (isMove < 0) {
             this.handleMoveList(this.index + 1)
             this.handlePoint(this.index + 1)
@@ -205,9 +206,9 @@ class Carousel {
 
     } else {
       isMove = ~~(this.attrs.endPos - this.attrs.startPos)
-      half = this.warpH * .5
+      halfs = this.attrs.half || this.warpH * .5
       if (Math.abs(isMove) > 0 && this.attrs.endPos !== 0) {
-        if (Math.abs(isMove) >= this.attrs.half) {
+        if (Math.abs(isMove) >= halfs) {
           if (isMove < 0) {
             this.handleMoveList(this.index + 1)
             this.handlePoint(this.index + 1)
