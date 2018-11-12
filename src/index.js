@@ -13,12 +13,13 @@ class Carousel {
       startPos: '', // 初始位置
       endPos: '', // 结束位置
       play: opts.play || false, // 自动播放
-      time: opts.time || 2000, // 播放时间 默认2000
+      time: opts.time || 3000, // 播放时间 默认3000
       horizontal: opts.horizontal || false, // 方向 默认横向
-      point: opts.point || false,
-      pointColor: opts.pointColor || 'blue',
-      pointSize: opts.pointSize || '6px',
-      touch: opts.touch || false,
+      point: opts.point || false, // 是否创建小点
+      pointColor: opts.pointColor || 'blue', // 选择颜色
+      pointSize: opts.pointSize || '6px', // 圆点大小
+      touch: opts.touch || false, // 是否可滑动
+      half: opts.half || this.warpW * .5 // 切换
     }
 
     this.index = 0;
@@ -183,12 +184,11 @@ class Carousel {
 
   handleTouchEnd() {
     let isMove;
-    let half;
     if (this.attrs.horizontal) {
       isMove = ~~(this.attrs.endPosX - this.attrs.startPosX)
-      half = this.warpW * .5
+      
       if (Math.abs(isMove) > 0 && this.attrs.endPosX !== 0) {
-        if (Math.abs(isMove) >= half) {
+        if (Math.abs(isMove) >= this.attrs.half) {
           if (isMove < 0) {
             this.handleMoveList(this.index + 1)
             this.handlePoint(this.index + 1)
@@ -207,7 +207,7 @@ class Carousel {
       isMove = ~~(this.attrs.endPos - this.attrs.startPos)
       half = this.warpH * .5
       if (Math.abs(isMove) > 0 && this.attrs.endPos !== 0) {
-        if (Math.abs(isMove) >= half) {
+        if (Math.abs(isMove) >= this.attrs.half) {
           if (isMove < 0) {
             this.handleMoveList(this.index + 1)
             this.handlePoint(this.index + 1)
