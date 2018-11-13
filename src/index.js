@@ -5,7 +5,7 @@ Object.prototype.prepend = function (newElenment) {
 
 const loop = () => {}
 
-class Carousel {
+export default class Carousel {
   constructor(opts) {
     this.attrs = {
       warp: opts.warp,
@@ -245,6 +245,10 @@ class Carousel {
         default:
           break;
       }
+
+      if (this.attrs.play) {
+        this.handlePlayer()
+      }
     })
     this.handlePoint(index)
   }
@@ -293,25 +297,29 @@ class Carousel {
         this._warp.style.transform = `translate3d(${parseInt(dis)}px, 0, 0)`
         if (vv > 0 && parseInt(this._warp.style.transform.slice(12)) >= end) {
           this._warp.style.transform = `translate3d(${parseInt(dis)}px, 0, 0)`
-          clearInterval(this.timer);
+          clearInterval(this.timer)
+          clearInterval(this.interval)
           cb && cb();
         }
         if (vv < 0 && parseInt(this._warp.style.transform.slice(12)) <= end) {
           this._warp.style.transform = `translate3d(${parseInt(dis)}px, 0, 0)`
           clearInterval(this.timer)
+          clearInterval(this.interval)
           cb && cb();
         }
       } else {
         this._warp.style.transform = `translate3d(0, ${parseInt(dis)}px, 0)`
         if (vv > 0 && parseInt(this._warp.style.transform.slice(16)) >= end) {
           this._warp.style.transform = `translate3d(0, ${parseInt(dis)}px, 0)`
-          clearInterval(this.timer);
+          clearInterval(this.timer)
+          clearInterval(this.interval)
           cb && cb();
         }
 
         if (vv < 0 && parseInt(this._warp.style.transform.slice(16)) <= end) {
           this._warp.style.transform = `translate3d(0, ${parseInt(dis)}px, 0)`
           clearInterval(this.timer)
+          clearInterval(this.interval)
           cb && cb();
         }
       }
