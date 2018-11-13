@@ -5,7 +5,7 @@ Object.prototype.prepend = function (newElenment) {
 
 const loop = () => {}
 
-export default class Carousel {
+class Carousel {
   constructor(opts) {
     this.attrs = {
       warp: opts.warp,
@@ -188,36 +188,25 @@ export default class Carousel {
     if (this.attrs.horizontal) {
       halfs = this.attrs.half || this.warpW * .5
       isMove = ~~(this.attrs.endPosX - this.attrs.startPosX)
-      if (Math.abs(isMove) > 0 && this.attrs.endPosX !== 0) {
-        if (Math.abs(isMove) >= halfs) {
-          if (isMove < 0) {
-            this.handleMoveList(this.index + 1)
-          } else {
-            this.handleMoveList(this.index - 1)
-          }
-        } else {
-          this.handleMoveList(this.index)
-        }
-      } else {
-        console.log('未拖动')
-      }
-
     } else {
       isMove = ~~(this.attrs.endPos - this.attrs.startPos)
       halfs = this.attrs.half || this.warpH * .5
-      if (Math.abs(isMove) > 0 && this.attrs.endPos !== 0) {
-        if (Math.abs(isMove) >= halfs) {
-          if (isMove < 0) {
-            this.handleMoveList(this.index + 1)
-          } else {
-            this.handleMoveList(this.index - 1)
-          }
+    }
+
+    if (Math.abs(isMove) > 0 && (this.attrs.endPos !== 0 || this.attrs.endPosX !== 0)) {
+      if (Math.abs(isMove) >= halfs) {
+        if (isMove < 0) {
+          this.index = this.index + 1
+          this.handleMoveList(this.index)
         } else {
+          this.index = this.index - 1
           this.handleMoveList(this.index)
         }
       } else {
-        console.log('未拖动')
+        this.handleMoveList(this.index)
       }
+    } else {
+      console.log('未拖动')
     }
 
     if (this.attrs.play) {
@@ -228,43 +217,35 @@ export default class Carousel {
 
   handleMoveList(index) {
     let start,
-      end
+      end,
+      warpWH
 
     if (this.attrs.horizontal) {
       start = parseInt(this._warp.style.transform.slice(12))
       end = -(index * this.warpW)
-      this.tweenTranslateAnimate(start, end, () => {
-        switch (index) {
-          case this._mainLen:
-            this.handleMainMove(0)
-            this.index = 0
-            break;
-          case -1:
-            this.handleMainMove(this.warpW * (1 - this._mainLen))
-            this.index = this._mainLen
-            break;
-          default:
-            break;
-        }
-      })
+      warpWH = this.warpW
     } else {
       start = parseInt(this._warp.style.transform.slice(16))
       end = -(index * this.warpH)
-      this.tweenTranslateAnimate(start, end, () => {
-        switch (index) {
-          case this._mainLen:
-            this.handleMainMove(0)
-            this.index = 0
-            break;
-          case -1:
-            this.handleMainMove(this.warpH * (1 - this._mainLen))
-            this.index = this._mainLen
-            break;
-          default:
-            break;
-        }
-      })
+      warpWH = this.warpH
     }
+
+    this.tweenTranslateAnimate(start, end, () => {
+      console.log(index, this.index, this._mainLen)
+
+      switch (index) {
+        case this._mainLen:
+          this.handleMainMove(0)
+          this.index = 0
+          break;
+        case -1:
+          this.handleMainMove(warpWH * (1 - this._mainLen))
+          this.index = this._mainLen - 1
+          break;
+        default:
+          break;
+      }
+    })
     this.handlePoint(index)
   }
 
