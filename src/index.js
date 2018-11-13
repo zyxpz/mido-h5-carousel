@@ -5,7 +5,7 @@ Object.prototype.prepend = function (newElenment) {
 
 const loop = () => {}
 
-export default class Carousel {
+class Carousel {
   constructor(opts) {
     this.attrs = {
       warp: opts.warp,
@@ -230,9 +230,8 @@ export default class Carousel {
       warpWH = this.warpH
     }
 
-    this.tweenTranslateAnimate(start, end, () => {
-      console.log(index, this.index, this._mainLen)
 
+    this.tweenTranslateAnimate(start, end, () => {
       switch (index) {
         case this._mainLen:
           this.handleMainMove(0)
@@ -245,7 +244,6 @@ export default class Carousel {
         default:
           break;
       }
-
       if (this.attrs.play) {
         this.handlePlayer()
       }
@@ -278,10 +276,10 @@ export default class Carousel {
   }
 
   handlePlayer() {
-    this.interval = setInterval(function () {
+    this.interval = setInterval(() => {
       this.index = this.index + 1
       this.handleMoveList(this.index)
-    }.bind(this), this.attrs.time)
+    }, this.attrs.time)
   }
 
   tweenTranslateAnimate(start, end, cb) {
@@ -291,7 +289,7 @@ export default class Carousel {
     let easeOut = (t, b, c, d) =>
       -c * (t /= d) * (t - 2) + b;
 
-    this.timer = setInterval(function () {
+    this.timer = setInterval(() => {
       let dis = start + easeOut(++t, 0, vv, duration);
       if (this.attrs.horizontal) {
         this._warp.style.transform = `translate3d(${parseInt(dis)}px, 0, 0)`
@@ -323,6 +321,6 @@ export default class Carousel {
           cb && cb();
         }
       }
-    }.bind(this), 4)
+    }, 4)
   }
 }
