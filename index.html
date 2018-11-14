@@ -83,7 +83,13 @@
 		play: true,
 		horizontal: true,
 		point: true,
-		touch: true
+		touch: true,
+		pointEleRender(currentIndex) {
+			return `<span data-tap="${currentIndex}">${currentIndex}</span>`
+		},
+		onSwitch(currentIndex) {
+			console.log(currentIndex)
+		}
 	})
 
 	carousel2.init();

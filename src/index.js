@@ -3,6 +3,8 @@ Object.prototype.prepend = function (newElenment) {
   return this
 }
 
+const loop = () => {}
+
 export default class Carousel {
   constructor(opts) {
     this.attrs = {
@@ -17,6 +19,8 @@ export default class Carousel {
       pointColor: opts.pointColor || 'blue',
       pointSize: opts.pointSize || '6px',
       touch: opts.touch || false,
+      pointEleRender: opts.pointEleRender || loop,
+      onSwitch: opts.onSwitch || loop
     }
 
     this.index = 0;
@@ -83,9 +87,8 @@ export default class Carousel {
     let pointDom = document.createElement('div');
 
     pointDom.className = `point-dom-${this.attrs.horizontal}`
-
     this._main.forEach((e, i) => {
-      pointDom.innerHTML += `<span class='point-list-${this.attrs.horizontal}' data-tap='${i}'>●</span>`
+      pointDom.innerHTML += this.attrs.pointEleRender(i) || `<span class='point-list-${this.attrs.horizontal}' data-tap='${i}'>●</span>`
     });
 
     if (this.attrs.horizontal) {
@@ -283,12 +286,13 @@ export default class Carousel {
     if (this.attrs.point) {
       this.handlePoint(index)
     }
+
+    this.attrs.onSwitch(this.index)
   }
 
   handlePlayer() {
-    const that = this;
     this.interval = setInterval(() => {
-      that.next()
+      this.next()
     }, this.attrs.time)
   }
 }

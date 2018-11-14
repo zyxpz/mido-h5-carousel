@@ -11,6 +11,12 @@ const carousel = new Carousel({
     pointColor: 'blue', // 小点颜色
     pointSize: '6px', // 圆点大小
     touch: true, // 是否可滑动 默认不可以
+    pointEleRender: function(currentIndex) {
+      return `<span data-tap='${currentIndex}'>${currentIndex}</span>`
+    }, // 可修改圆点样式
+    onSwitch: function(currentIndex) {
+      console.log(currentIndex)
+    } // 返回切换的index
 	})
 
 	carousel.init();
