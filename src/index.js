@@ -13,7 +13,7 @@ export default class Carousel {
       startPos: '', // 初始位置
       endPos: '', // 结束位置
       play: opts.play || false, // 自动播放
-      time: opts.time || 2000, // 播放时间 默认2000
+      time: opts.time || 3000, // 播放时间 默认2000
       horizontal: opts.horizontal || false, // 方向 默认横向
       point: opts.point || false,
       pointColor: opts.pointColor || 'blue',
@@ -24,6 +24,8 @@ export default class Carousel {
     }
 
     this.index = 0;
+
+    this.stop = false;
   }
 
   init() {
@@ -145,6 +147,12 @@ export default class Carousel {
 
   handleTouchStart(e) {
     e.preventDefault()
+    
+    if (this.stop) {
+      console.log('stop')
+      return
+    }
+
     this.attrs.startPos = e.touches[0].pageY
 
     this.attrs.startPosX = e.touches[0].pageX
@@ -170,15 +178,19 @@ export default class Carousel {
 
     this.attrs.endPosX = e.touches[0].pageX
 
-    if (this.attrs.horizontal) {
-      this._warp.style.cssText = `transform: translate3d(${this.attrs.endPosX - this.attrs.startPosX - this.index * e.target.offsetWidth}px, 0, 0); transition: none`
-    } else {
-      this._warp.style.cssText = `transform: translate3d(0, ${this.attrs.endPos - this.attrs.startPos - this.index * e.target.offsetHeight}px, 0); transition: none`
-    }
+    // if (this.attrs.horizontal) {
+    //   this._warp.style.cssText = `transform: translate3d(${this.attrs.endPosX - this.attrs.startPosX - this.index * e.target.offsetWidth}px, 0, 0); transition: none`
+    // } else {
+    //   this._warp.style.cssText = `transform: translate3d(0, ${this.attrs.endPos - this.attrs.startPos - this.index * e.target.offsetHeight}px, 0); transition: none`
+    // }
 
   }
 
   handleTouchEnd() {
+    if (this.stop) {
+      console.log('stop')
+      return
+    }
     if (this.attrs.horizontal && this.attrs.endPos !== '') {
       if ((this.attrs.endPosX - this.attrs.startPosX) > 10) {
         this.prev()
@@ -245,9 +257,10 @@ export default class Carousel {
       if (index === -1) {
         this.index = this._mainLen
         this._warp.style.cssText = `transform: translate3d(${1 * this.warpW}px, 0, 0); transition: transform .5s`
-
+        this.stop = true
         this.timmer = setTimeout(() => {
           this._warp.style.cssText = `transform: translate3d(${-(this._mainLen - 1) * this.warpW}px, 0, 0);`
+          this.stop = false
           clearTimeout(that.timmer)
         }, 550);
       } else {
@@ -256,8 +269,10 @@ export default class Carousel {
 
       if (index === this._mainLen) {
         this.index = 0
+        this.stop = true
         this.timmer = setTimeout(() => {
           this._warp.style.cssText = `transform: translate3d(0, 0, 0);`
+          this.stop = false
           clearTimeout(that.timmer)
         }, 550);
       }
