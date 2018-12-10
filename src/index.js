@@ -147,7 +147,7 @@ export default class Carousel {
 
   handleTouchStart(e) {
     e.preventDefault()
-    
+
     if (this.stop) {
       console.log('stop')
       return
@@ -191,19 +191,22 @@ export default class Carousel {
       console.log('stop')
       return
     }
-    if (this.attrs.horizontal && this.attrs.endPos !== '') {
-      if ((this.attrs.endPosX - this.attrs.startPosX) > 10) {
-        this.prev()
-      } else if ((this.attrs.endPosX - this.attrs.startPosX) < -10) {
-        this.next()
-      }
-    } else {
-      if ((this.attrs.endPos - this.attrs.startPos) > 10) {
-        this.prev()
-      } else if ((this.attrs.endPos - this.attrs.startPos) < -10) {
-        this.next()
+    if (this.attrs.endPos !== '') {
+      if (this.attrs.horizontal) {
+        if ((this.attrs.endPosX - this.attrs.startPosX) > 10) {
+          this.prev()
+        } else if ((this.attrs.endPosX - this.attrs.startPosX) < -10) {
+          this.next()
+        }
+      } else {
+        if ((this.attrs.endPos - this.attrs.startPos) > 10) {
+          this.prev()
+        } else if ((this.attrs.endPos - this.attrs.startPos) < -10) {
+          this.next()
+        }
       }
     }
+
 
     if (this.attrs.play) {
       this.handlePlayer()
